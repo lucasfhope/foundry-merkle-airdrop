@@ -33,12 +33,14 @@ contract MerkleAirdrop is EIP712 {
 
     // external functions
 
-    function claim(address account, uint256 amount, bytes32[] calldata merkleProof, uint8 v, bytes32 r, bytes32 s) external {
+    function claim(address account, uint256 amount, bytes32[] calldata merkleProof, uint8 v, bytes32 r, bytes32 s)
+        external
+    {
         if (s_hasClaimed[account]) {
             revert MerkleAirdrop__AlreadyClaimed();
         }
         // check the signature
-        if(!_isValidSignature(account, getEIP712MessageHash(account, amount), v, r, s)) {
+        if (!_isValidSignature(account, getEIP712MessageHash(account, amount), v, r, s)) {
             revert MerkleAirdrop__InvalidSignature();
         }
         // calculate using the account and the amount, the hash -> leaft node
@@ -53,17 +55,20 @@ contract MerkleAirdrop is EIP712 {
 
     // Internal Functions
 
-    function _isValidSignature(address account, bytes32 digest, uint8 v, bytes32 r, bytes32 s) internal pure returns (bool) {
-        (address actualSigner, , ) = ECDSA.tryRecover(digest, v, r, s);
+    function _isValidSignature(address account, bytes32 digest, uint8 v, bytes32 r, bytes32 s)
+        internal
+        pure
+        returns (bool)
+    {
+        (address actualSigner,,) = ECDSA.tryRecover(digest, v, r, s);
         return actualSigner == account;
     }
 
     // Getter Functions
 
     function getEIP712MessageHash(address account, uint256 amount) public view returns (bytes32) {
-        return _hashTypedDataV4(
-            keccak256(abi.encode(MESSAGE_TYPEHASH, AirdropClaim({account: account, amount: amount})))
-        );
+        return
+            _hashTypedDataV4(keccak256(abi.encode(MESSAGE_TYPEHASH, AirdropClaim({account: account, amount: amount}))));
     }
 
     function getMerkleRoot() external view returns (bytes32) {

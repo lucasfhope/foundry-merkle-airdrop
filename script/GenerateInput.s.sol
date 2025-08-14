@@ -11,14 +11,14 @@ contract GenerateInput is Script {
     string[] types = new string[](2);
     uint256 count;
     string[] whitelist = new string[](3);
-    string private constant  INPUT_PATH = "/script/target/input.json";
+    string private constant INPUT_PATH = "/script/target/input.json";
 
     function run() public {
         types[0] = "address";
         types[1] = "uint";
-        whitelist[0] = "0xbB6476B878B28965969F63720E0269A48132d9e3";    // dev waller
-        whitelist[1] = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";    // anvil wallet
-        whitelist[2] = "0x6CA6d1e2D5347Bfab1d91e883F1915560e09129D";    // "user" waller from test
+        whitelist[0] = "0xbB6476B878B28965969F63720E0269A48132d9e3"; // dev waller
+        whitelist[1] = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // anvil wallet
+        whitelist[2] = "0x6CA6d1e2D5347Bfab1d91e883F1915560e09129D"; // "user" waller from test
         count = whitelist.length;
         string memory input = _createJSON();
         // write to the output file the stringified output json tree dump
@@ -33,12 +33,40 @@ contract GenerateInput is Script {
         string memory json = string.concat('{ "types": ["address", "uint"], "count":', countString, ',"values": {');
         for (uint256 i = 0; i < whitelist.length; i++) {
             if (i == whitelist.length - 1) {
-                json = string.concat(json, '"', vm.toString(i), '"', ': { "0":', '"',whitelist[i],'"',', "1":', '"',amountString,'"', ' }');
+                json = string.concat(
+                    json,
+                    '"',
+                    vm.toString(i),
+                    '"',
+                    ': { "0":',
+                    '"',
+                    whitelist[i],
+                    '"',
+                    ', "1":',
+                    '"',
+                    amountString,
+                    '"',
+                    " }"
+                );
             } else {
-            json = string.concat(json, '"', vm.toString(i), '"', ': { "0":', '"',whitelist[i],'"',', "1":', '"',amountString,'"', ' },');
+                json = string.concat(
+                    json,
+                    '"',
+                    vm.toString(i),
+                    '"',
+                    ': { "0":',
+                    '"',
+                    whitelist[i],
+                    '"',
+                    ', "1":',
+                    '"',
+                    amountString,
+                    '"',
+                    " },"
+                );
             }
         }
-        json = string.concat(json, '} }');
+        json = string.concat(json, "} }");
 
         return json;
     }

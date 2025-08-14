@@ -8,8 +8,6 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ZkSyncChainChecker} from "lib/foundry-devops/src/ZkSyncChainChecker.sol";
 import {DeployMerkleAirdrop} from "script/DeployMerkleAirdrop.s.sol";
 
-
-
 contract MerkleAirdropTest is ZkSyncChainChecker, Test {
     MerkleAirdrop public merkleAirdrop;
     SixSevenToken public token;
@@ -25,14 +23,13 @@ contract MerkleAirdropTest is ZkSyncChainChecker, Test {
     bytes32 proof2 = 0xba80d97a3ae1f95d682c1ecd232a7cc71fbf323beb47219b74bf5c820da7e419;
     bytes32[] public PROOF = [proof1, proof2];
 
-    
     function setUp() public {
-        if(!isZkSyncChain()) {
+        if (!isZkSyncChain()) {
             DeployMerkleAirdrop deployer = new DeployMerkleAirdrop();
             (merkleAirdrop, token) = deployer.deployMerkleAirdrop();
         } else {
             token = new SixSevenToken();
-            merkleAirdrop = new MerkleAirdrop(ROOT,IERC20(token));
+            merkleAirdrop = new MerkleAirdrop(ROOT, IERC20(token));
             token.mint(token.owner(), AMOUNT_TO_SEND);
             token.transfer(address(merkleAirdrop), AMOUNT_TO_SEND);
         }
@@ -56,5 +53,4 @@ contract MerkleAirdropTest is ZkSyncChainChecker, Test {
         console.log("Ending balance: ", endingBalance);
         assertEq(endingBalance - startingBalance, AMOUNT_TO_CLAIM);
     }
-
 }

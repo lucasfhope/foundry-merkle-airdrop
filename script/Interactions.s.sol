@@ -12,9 +12,10 @@ contract ClaimAirdropAnvil is Script {
     bytes32 PROOF1 = 0x793b52ec15707df3a079b9bef9182e21cd445f1b169bcafad1115c4ab97b2010;
     bytes32 PROOF2 = 0xfc19450a5dbe7ef4a90490449e69ce9c9d67497f2e8e4d521d4ff9850937b153;
     bytes32[] PROOF = [PROOF1, PROOF2];
-    bytes private SIGNATURE = hex"fbd2270e6f23fb5fe9248480c0f4be8a4e9bd77c3ad0b1333cc60b5debc511602a2a06c24085d8d7c038bad84edc53664c8ce0346caeaa3570afec0e61144dc11c";
+    bytes private SIGNATURE =
+        hex"fbd2270e6f23fb5fe9248480c0f4be8a4e9bd77c3ad0b1333cc60b5debc511602a2a06c24085d8d7c038bad84edc53664c8ce0346caeaa3570afec0e61144dc11c";
 
-    function claimAirdrop(address airdrop) public  {
+    function claimAirdrop(address airdrop) public {
         vm.startBroadcast();
         (uint8 v, bytes32 r, bytes32 s) = SignatureUtils.splitSignature(SIGNATURE);
         MerkleAirdrop(airdrop).claim(CLAIMING_ADDRESS, CLAIMING_AMOUNT, PROOF, v, r, s);
